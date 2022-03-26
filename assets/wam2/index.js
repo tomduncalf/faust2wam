@@ -20,7 +20,7 @@ class FaustCompositeAudioNode extends CompositeAudioNode {
 	 */
 	setup(output, paramMgr) {
 		if (output.numberOfInputs > 0) this.connect(output, 0, 0);
-		paramMgr.addEventListener('wam-midi', (e) => output.midiMessage(e.detail.data.bytes));
+		paramMgr.addEventListener('wam-midi', (e) => output.midiMessage(e.detail.data.bytes, e.timeStamp));
 		/** @type {ParamMgrNode} */
 		this._wamNode = paramMgr;
 		/** @type {FaustAudioWorkletNode} */
