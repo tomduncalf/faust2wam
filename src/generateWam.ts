@@ -11,7 +11,10 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
         _output: FaustAudioWorkletNode;
         setup(output: FaustAudioWorkletNode, paramMgr: ParamMgrNode) {
             if (output.numberOfInputs > 0) this.connect(output, 0, 0);
-            paramMgr.addEventListener('wam-midi', (e) => output.midiMessage(e.detail.data.bytes));
+            paramMgr.addEventListener('wam-midi', (e) => {
+                console.log('generateWam', e);
+                output.midiMessage(e.detail.data.bytes, e.timeStamp)
+            });
             this._wamNode = paramMgr;
             this._output = output;
         }
@@ -26,7 +29,7 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
             return this._wamNode.setParamValue(name, value);
         }
     }
-    
+
     const WAM = class extends WebAudioModule<ParamMgrNode> {
         faustNode: FaustAudioWorkletNode;
         async _loadDescriptor() {
@@ -38,7 +41,7 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
         }
         async createAudioNode(initialState: any) {
             const voices = faustDsp.mixerModule ? 64 : 0;
-    
+
             if (voices) {
                 const generator = new FaustPolyDspGenerator();
                 this.faustNode = await generator.createNode(
@@ -63,7 +66,7 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
             if (initialState) node.setState(initialState);
             return node;
         }
-    
+
         async createGui() {
             const elementId = `${this.moduleId.toLowerCase().replace(/\W/g, "")}-ui`;
             try {
