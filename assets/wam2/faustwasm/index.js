@@ -1933,7 +1933,6 @@ var FaustWebAudioDspVoice = class {
     });
   }
   keyOn(pitch, velocity, legato = false, timestamp = 0) {
-    console.log(timestamp);
     this.fNoteStartTimestamp = timestamp;
     if (legato) {
       this.fNextNote = pitch;
@@ -2263,7 +2262,6 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
     }
   }
   keyOn(channel, pitch, velocity, timestamp = 0) {
-    console.log("KEY ON", timestamp);
     const voice = this.getFreeVoice();
     this.fVoiceTable[voice].keyOn(pitch, velocity, this.fVoiceTable[voice].fCurNote == FaustWebAudioDspVoice.kLegatoVoice, timestamp);
   }
