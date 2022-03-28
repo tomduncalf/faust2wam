@@ -2117,9 +2117,9 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
       const sliceStart = boundaryIndex > 0 ? sliceBoundaries[boundaryIndex - 1] : 0;
       const sliceEnd = sliceBoundaries[boundaryIndex];
       const sliceLength = sliceEnd - sliceStart;
-      console.log({ sliceStart, sliceEnd, sliceLength });
       if (sliceStart > 0) {
-        for (let chan = 0; chan < this.fOutputsItems.length; chan++) {
+        console.log({ sliceStart, sliceEnd, sliceLength });
+        for (let chan = 0; chan < this.getNumOutputs(); chan++) {
           HEAP32[(this.fAudioOutputs >> 2) + chan] = this.originalOutputBufferPointers[chan] + sliceStart * this.gSampleSize;
           HEAP32[(this.fAudioMixing >> 2) + chan] = this.originalMixingBufferPointers[chan] + sliceStart * this.gSampleSize;
         }
@@ -2137,7 +2137,7 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
     }
     if (this.fInstance.effectAPI)
       this.fInstance.effectAPI.compute(this.fEffect, this.fBufferSize, this.fAudioOutputs, this.fAudioOutputs);
-    for (let chan = 0; chan < this.fOutputsItems.length; chan++) {
+    for (let chan = 0; chan < this.getNumOutputs(); chan++) {
       HEAP32[(this.fAudioOutputs >> 2) + chan] = this.originalOutputBufferPointers[chan];
       HEAP32[(this.fAudioMixing >> 2) + chan] = this.originalMixingBufferPointers[chan];
     }
