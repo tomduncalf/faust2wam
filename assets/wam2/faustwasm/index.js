@@ -2122,10 +2122,15 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
           HEAP32[(this.fAudioMixing >> 2) + chan] = this.originalMixingBufferPointers[chan] + sliceStart * this.gSampleSize;
         }
       }
+      if (event && event.sampleOffset < 0) {
+        console.log("negative event", event);
+      }
       if (event && event.type === "NOTE_ON") {
         this.keyOn(0, 60, 1);
       } else if (event && event.type === "NOTE_OFF") {
         this.keyOff(0, 60, 1);
+      } else if (event && event.type === "PARAMETER_CHANGE") {
+        this.setParamValue(event.data.path, event.data.value);
       }
       this.fVoiceTable.forEach((voice) => {
         if (voice.fCurNote !== FaustWebAudioDspVoice.kFreeVoice) {
@@ -2168,14 +2173,11 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
     const currentTime2 = this.processor.getCurrentTime();
     const sampleRate = this.processor.getSampleRate();
     const endOfCurrentFrameSecs = currentTime2 + this.fBufferSize / sampleRate;
-    for (let event of this.scheduledEvents) {
-      if (event.time < endOfCurrentFrameSecs) {
-        const enrichedEvent = this.scheduledEvents.shift();
-        enrichedEvent.sampleOffset = Math.round((event.time - currentTime2) * sampleRate);
-        events.push(enrichedEvent);
-        continue;
-      }
-      break;
+    while (this.scheduledEvents.length && this.scheduledEvents[0].time < endOfCurrentFrameSecs) {
+      const event = this.scheduledEvents[0];
+      const enrichedEvent = this.scheduledEvents.shift();
+      enrichedEvent.sampleOffset = Math.round((event.time - currentTime2) * sampleRate);
+      events.push(enrichedEvent);
     }
     return events;
   }
@@ -2275,6 +2277,7 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
   }
   scheduleEvent(event) {
     console.log("scheudling event", event);
+    event.id = this.scheduledEvents.length;
     this.scheduledEvents.push(event);
     this.scheduledEvents.sort((a, b) => a.time - b.time);
   }
