@@ -11,10 +11,10 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
         _output: FaustAudioWorkletNode;
         setup(output: FaustAudioWorkletNode, paramMgr: ParamMgrNode) {
             if (output.numberOfInputs > 0) this.connect(output, 0, 0);
-            paramMgr.addEventListener('wam-midi', (e) => {
-                console.log('generateWam', e);
-                output.midiMessage(e.detail.data.bytes, e.timeStamp)
-            });
+            // paramMgr.addEventListener('wam-midi', (e) => {
+            //     console.log('generateWam', e);
+            //     output.midiMessage(e.detail.data.bytes, e.timeStamp)
+            // });
             this._wamNode = paramMgr;
             this._output = output;
         }
@@ -27,6 +27,9 @@ const generateWam = (faustDsp: FaustDspDistribution) => {
         }
         setParamValue(name: string, value: number) {
             return this._wamNode.setParamValue(name, value);
+        }
+        scheduleEvent() {
+            this._output.scheduleEvent();
         }
     }
 

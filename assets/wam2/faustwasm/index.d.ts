@@ -654,6 +654,9 @@ export declare class FaustPolyWebAudioDsp extends FaustBaseWebAudioDsp implement
 	private fAudioMixing;
 	private fAudioMixingHalf;
 	private fVoiceTable;
+	private scheduledEvents;
+	private originalMixingBufferPointers;
+	private originalOutputBufferPointers;
 	constructor(instance: FaustPolyDspInstance, sampleRate: number, sampleSize: number, bufferSize: number, processor: any);
 	private initMemory;
 	toString(): string;
@@ -663,6 +666,7 @@ export declare class FaustPolyWebAudioDsp extends FaustBaseWebAudioDsp implement
 	compute(input: Float32Array[], output: Float32Array[]): boolean;
 	getNumInputs(): number;
 	getNumOutputs(): number;
+	getEventsInCurrentFrame(): any[];
 	private static findPath;
 	setParamValue(path: string, value: number): void;
 	getParamValue(path: string): number;
@@ -674,6 +678,7 @@ export declare class FaustPolyWebAudioDsp extends FaustBaseWebAudioDsp implement
 	ctrlChange(channel: number, ctrl: number, value: number): void;
 	keyOn(channel: number, pitch: number, velocity: number, timestamp?: number): void;
 	keyOff(channel: number, pitch: number, velocity: number, timestamp?: number): void;
+	scheduleEvent(event: any): void;
 	allNotesOff(hard?: boolean): void;
 }
 /**
@@ -960,6 +965,7 @@ export declare class FaustPolyAudioWorkletNode extends FaustAudioWorkletNode<tru
 	private fJSONEffect;
 	onprocessorerror: (e: Event) => never;
 	constructor(context: BaseAudioContext, name: string, voiceFactory: LooseFaustDspFactory, mixerModule: WebAssembly.Module, voices: number, sampleSize: number, effectFactory?: LooseFaustDspFactory);
+	scheduleEvent(event: any): void;
 	keyOn(channel: number, pitch: number, velocity: number): void;
 	keyOff(channel: number, pitch: number, velocity: number): void;
 	allNotesOff(hard: boolean): void;

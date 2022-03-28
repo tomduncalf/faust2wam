@@ -49,6 +49,10 @@ class FaustCompositeAudioNode extends CompositeAudioNode {
 	setParamValue(name, value) {
 		return this._wamNode.setParamValue(name, value);
 	}
+
+	scheduleEvent(event) {
+		this._output.scheduleEvent(event);
+	}
 }
 
 /**
