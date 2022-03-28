@@ -619,10 +619,6 @@ var getFaustAudioWorkletProcessor = (dependencies, faustData) => {
       return params;
     }
     process(inputs, outputs, parameters) {
-      for (const path in parameters) {
-        const paramArray = parameters[path];
-        this.fDSPCode.setParamValue(path, paramArray[0]);
-      }
       return this.fDSPCode.compute(inputs[0], outputs[0]);
     }
     handleMessageAux(e) {
@@ -2126,9 +2122,9 @@ this.fAudioMixingHalf: ${this.fAudioMixingHalf}`;
         console.log("negative event", event);
       }
       if (event && event.type === "NOTE_ON") {
-        this.keyOn(0, 60, 1);
+        this.keyOn(0, event.data.note, 1);
       } else if (event && event.type === "NOTE_OFF") {
-        this.keyOff(0, 60, 1);
+        this.keyOff(0, event.data.note, 1);
       } else if (event && event.type === "PARAMETER_CHANGE") {
         this.setParamValue(event.data.path, event.data.value);
       }
