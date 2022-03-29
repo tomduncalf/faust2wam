@@ -46,6 +46,14 @@ class FaustCompositeAudioNode extends CompositeAudioNode {
 	setParamValue(name, value) {
 		return this._wamNode.setParamValue(name, value);
 	}
+
+	/**
+	 * TODO add type
+	 * @param {any} event
+	 */
+	scheduleEvent(event) {
+		this._output.scheduleEvent(event);
+	}
 }
 
 /**
@@ -57,7 +65,7 @@ const getBasetUrl = (relativeURL) => {
 	return baseURL;
 };
 
-export default class FaustPingPongDelayPlugin extends WebAudioModule {
+export default class FaustPlugin extends WebAudioModule {
 	/**
 	 * Faust generated WebAudio AudioWorkletNode Constructor
 	 */
